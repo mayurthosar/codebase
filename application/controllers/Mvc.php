@@ -23,11 +23,18 @@ class Mvc extends CI_Controller {
 		$header['title'] = "MVC";
 		$this->loadLayout('index',$header);		
 	}
-	public function loadLayout($view,$headerData,$sidebarData = null ,$mainContent = null,$footerData = null)
+	public function loadLayout($view,$headerData,$mainContent = null)
 	{
 		$this->load->view('layout/default/head',$headerData);
-		$this->load->view('layout/default/sidebar',$sidebarData);
+		$this->load->view('layout/default/sidebar');
 		$this->load->view('mvc_creator/'.$view,$mainContent);
-		$this->load->view('layout/default/footer',$footerData);
+		$this->load->view('layout/default/footer');
 	}
+	public function create()
+    {
+//        echo $this->input->post('db_name');
+        $this->load->model('Mvc_Model');
+        $this->Mvc_Model->getStructure();
+    }
+
 }
