@@ -23,6 +23,54 @@ class Mvc extends CI_Controller {
 		$header['title'] = "MVC";
 		$this->loadLayout('index',$header);		
 	}
+
+    /**
+     * to create mvc crud laypout
+     */
+    public function create()
+    {
+        $this->load->model('Mvc_Model');
+        $result = $this->Mvc_Model->getStructure();
+        $this->load->library('table');
+        $header['title'] = "MVC | Generate Table";
+
+        $template = array(
+            'table_open' => '<table border="1" cellpadding="2" cellspacing="1" class="table wy-table-responsive">'
+        );
+
+        $this->table->set_template($template);
+
+        $this->table->set_heading(array('Field', 'Type','Show in List View','Show in Form','Searchable','Sortable'));
+
+        foreach($result as $key =>$value)
+        {
+           $this->table->add_row(array($value->name, $value->type,
+               "<select class='form-control' name=".$value->name."@inList><option value=".$value->name."@Yes>Yes</option>
+                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@isForm><option value=".$value->name."@Yes>Yes</option>
+                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@searchable><option value=".$value->name."@Yes>Yes</option>
+                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@sortable><option value=".$value->name."@Yes>Yes</option>
+                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@sortable><option value=".$value->name."@Yes>Yes</option>
+                <option value='No'>No</option></select>"));
+        }
+
+        $table['mainContent'] = $this->table->generate();
+        $this->loadLayout('generate',$header,$table);
+    }
+
+    /**
+     *
+     */
+    public function generate_crud()
+    {
+      echo json_encode($this->input->post());
+    }
+     /**
+     * @param $view view file to load
+     * @param $headerData data to pass to head of the document
+     * @param null $mainContent data to pass view page
+     * @author Mayur
+     */
+
 	public function loadLayout($view,$headerData,$mainContent = null)
 	{
 		$this->load->view('layout/default/head',$headerData);
@@ -30,11 +78,5 @@ class Mvc extends CI_Controller {
 		$this->load->view('mvc_creator/'.$view,$mainContent);
 		$this->load->view('layout/default/footer');
 	}
-	public function create()
-    {
-//        echo $this->input->post('db_name');
-        $this->load->model('Mvc_Model');
-        $this->Mvc_Model->getStructure();
-    }
 
 }

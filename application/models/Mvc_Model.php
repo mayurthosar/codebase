@@ -8,10 +8,6 @@
 
 class Mvc_Model extends CI_Model {
 
-    public $title;
-    public $content;
-    public $date;
-
     public function __construct()
     {
         parent::__construct();
@@ -48,7 +44,7 @@ class Mvc_Model extends CI_Model {
 
     public function getStructure()
     {
-        echo json_encode($this->connectDB());
+        return $this->connectDB();
     }
 
 

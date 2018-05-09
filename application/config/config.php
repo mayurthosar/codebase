@@ -522,3 +522,4 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 $config['csrf_protection'] = TRUE;
+$config['csrf_regenerate'] = FALSE;
