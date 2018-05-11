@@ -18,7 +18,15 @@ class Mvc extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+
+	public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->database('database');
+    }
+
+    public function index()
 	{
 		$header['title'] = "MVC";
 		$this->loadLayout('index',$header);		
@@ -31,29 +39,12 @@ class Mvc extends CI_Controller {
     {
         $this->load->model('Mvc_Model');
         $result = $this->Mvc_Model->getStructure();
-        $this->load->library('table');
+
         $header['title'] = "MVC | Generate Table";
+        $table['mainContent'] = tableInput(array('table_open' => '<table border="1" cellpadding="2" cellspacing="1" class="table wy-table-responsive">'
+        ),array('Field', 'Type','Show in List View','Show in Form','Searchable','Sortable'),$result);
 
-        $template = array(
-            'table_open' => '<table border="1" cellpadding="2" cellspacing="1" class="table wy-table-responsive">'
-        );
 
-        $this->table->set_template($template);
-
-        $this->table->set_heading(array('Field', 'Type','Show in List View','Show in Form','Searchable','Sortable'));
-
-        foreach($result as $key =>$value)
-        {
-           $this->table->add_row(array($value->name, $value->type,
-               "<select class='form-control' name=".$value->name."@inList><option value=".$value->name."@Yes>Yes</option>
-                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@isForm><option value=".$value->name."@Yes>Yes</option>
-                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@searchable><option value=".$value->name."@Yes>Yes</option>
-                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@sortable><option value=".$value->name."@Yes>Yes</option>
-                <option value='No'>No</option></select>", "<select class='form-control' name=".$value->name."@sortable><option value=".$value->name."@Yes>Yes</option>
-                <option value='No'>No</option></select>"));
-        }
-
-        $table['mainContent'] = $this->table->generate();
         $this->loadLayout('generate',$header,$table);
     }
 
@@ -62,7 +53,9 @@ class Mvc extends CI_Controller {
      */
     public function generate_crud()
     {
-      echo json_encode($this->input->post());
+//      echo json_encode($this->input->post());
+        $this->load->helper('table');
+        echo json_encode(tableReferenceList('','','','','',''));
     }
      /**
      * @param $view view file to load
